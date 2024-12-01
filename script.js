@@ -45,7 +45,7 @@ async function findMovie(){
     let search = document.getElementsByName("search")[0].value;
     let data = { apikey: "1b7ff984", t: search };
 
-    let response = await sendRequest("http://www.omdbapi.com/" , "GET", data);
+    let response = await sendRequest("https://www.omdbapi.com/" , "GET", data);
 
     return console.log(response);
     
