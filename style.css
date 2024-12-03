@@ -28,7 +28,9 @@ body{
         background-position:top left;
     }
 }
-
+.main{
+    display:none;
+}
 .rounded{
     border-radius: 10px;
     margin-bottom: 10px;
@@ -40,10 +42,31 @@ body{
     padding: 5px;
     background-color:rgb(200, 200, 200 , 0.3);
 }
-header{
+/* header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+} */
+.headerCont{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.navNone{
+    display: none;
+}
+@media (max-width:560px) {
+    .headerCont nav{
+        display: none;
+    }
+    .navNone{
+        display: block;
+        width: 270px;
+        text-align: center;
+        margin: 0 auto;
+        padding: 5px;
+    }
 }
 #themeChange{
     width: 50px;
@@ -86,6 +109,7 @@ nav a{
     font-size: 18px;
 }
 .movieTitle{
+    display: none;
     text-align: center;
     padding: 10px;
     font-style: 18px;
@@ -93,19 +117,19 @@ nav a{
     margin-bottom: 10px;
 }
 .movie{
-    display: flex;
-    justify-content: space-between;
-    gap: 0 10px;
+    display: none;
+    justify-content: space-between;flex-wrap: wrap;
+    gap: 20px 10px;
     margin-bottom: 10px;
 }
 #movieImg{
-    width: 400px;
-    height: 600px;
+    width: calc(260px + (400 - 260) * ((100vw - 320px) / (1920 - 320)));
+    height: calc(388px + (600 - 388) * ((100vw - 320px) / (1920 - 320)));
     background-image:url(./img/film2.jpg);
     background-size: cover;
     background-position:center;
     background-repeat: no-repeat;
-
+    margin: 0 auto;
 }
 .movieDescription{
     flex-grow: 1;
@@ -121,9 +145,10 @@ nav a{
 }
 .desc span{
     width: 50%;
+    font-size: calc(14px + (24 - 14) * ((100vw - 320px) / (1920 - 320)));
 }
 .semularMovie{
-    display: grid;
+    display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 10px;
 }
