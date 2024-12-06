@@ -16,6 +16,14 @@ const searchBtn = document.getElementById("searchBtn")
 // Слушатели событий
 themeChange.addEventListener("click", themeCh);
 searchBtn.addEventListener("click", findMovie)
+// Добавляем слушатель события на нажатие клавиши
+document.addEventListener('keydown', function(event) {
+    // Проверяем, была ли нажата клавиша пробела
+    if (event.code === 'Enter') {
+        findMovie()
+    }
+});
+
 
 // Смена темы 
 function themeCh(){
@@ -59,20 +67,69 @@ async function findMovie(){
     loader.style.display="block";
     let response = await sendRequest("https://www.omdbapi.com/" , "GET", data);
     loader.style.display="none";
-
+    
     if(response.Response == "False"){
         movie.style.display="none"
         main.style.display="block"
         movieTitle.style.display="block"
         movieTitle.innerHTML = `${response.Error}`
         console.log(response);
-        
+        semularMovie.style.display="none";
+        simTitle.style.display="none"
     }else{
-       showMovie(response)
-        
-    }
     
+    console.log(semularMovie);
+    
+       showMovie(response)
+       findSimularMovies()
+    }
 }
+
+const findSimularMovies = (async ()=>{
+    const search = document.getElementsByName("search")[0].value;
+    const simularMovieTItle = document.getElementsByClassName("movieTitle")[1];
+    const data = { apikey: "d6d0aa42", s: search };
+    const result = await sendRequest("https://www.omdbapi.com/" , "GET", data);
+    console.log(result);
+    if(result.Response=="False"){
+    }else{
+        simularMovieTItle.innerHTML = `Найдено похожих фильмов ${result.totalResults}`;
+        simularMovieTItle.style.display="block"
+        console.log(result.Search);
+        
+        showSimularMovie(result.Search)
+    }
+});
+
+// Отрисовка похожих фильмов
+
+const showSimularMovie = async(movies)=>{
+    const semularMovie = document.getElementsByClassName("semularMovie")[0];
+    semularMovie.innerHTML= "";
+    semularMovie.style.display="flex";
+    movies.forEach((elem)=>{
+        
+        if(elem.Poster != "N/A"){
+
+            let simularMovie = 
+            `
+        <div class="semularMovieCard" style="background-image: url('${elem.Poster}');">
+            <div class="saved" onclick="addSaved()"
+                data-imdbID="${elem.imdbID}" data-title="${elem.Title}" data-poster="${elem.Poster}">
+            </div>  
+            <div class="semularMovieCardTitle" >
+                ${elem.Title}
+            </div>
+        </div>`
+        semularMovie.innerHTML += simularMovie
+        }else{
+            semularMovie.innerHTML= ''
+        };
+
+    });
+}
+
+
 
 function showMovie(movie){
     main.style.display="block"
@@ -99,4 +156,88 @@ function showMovie(movie){
 }
 
 
+
+
+
+
+
+
+// Тест
+
+// const allPerson = [];
+// const addPerson = (add, addData = Date()) =>({
+//     ...add,
+//     addData,
+//     // addData,
+// });
+
+// const sul = {
+//     name: 'Sultanbek' ,
+//     age: 30,
+//     stydy: 'backend'
+// }
+// const person = {
+//     name: 'Sultan' ,
+//     age: 25,
+//     stydy: 'frontEnd'
+// }
+
+// allPerson.push('addPerson(sul))');
+// console.log(allPerson);
+
+// console.log(addPerson(sul));
+
+// const personw = addPerson(person);
+// console.log(person);
+
+// console.log(personw);
+
+
+// const mapArr = [12, 23, 34  ];
+
+// console.log(mapArr);
+
+// const newArr = mapArr.map((a) => {
+//     a - 3
+//     return a - 3
+// } )
+
+// console.log(newArr);
+
+// const userSul = {
+//     name: 'Sultan',
+//     age: 25,
+//     country: 'Tashkent'
+// }
+
+// const userINform = ({name , age}) => {
+//     if (!age){
+//         return `You don't ${name} !`
+//     }
+//     return `You ${name} welcome)`
+// }
+
+// console.log(userINform(userSul));
+
+
+// const {name, age , country} = userSul;
+
+// const mmmm = name;
+// console.log(mmmm);
+
+// console.log(name);
+// console.log(age);
+// console.log(country);
+
+
+// const massivLength = ['didi', 'lila', true];
+
+// console.log(massivLength);
+
+// const [mOne , mTwo] = massivLength;
+// const [oneM] = massivLength
+// // console.log(o);
+
+// console.log(mOne);
+// console.log(mTwo);
 
