@@ -1,6 +1,6 @@
 "use strict"
-
-// Элементы
+document.addEventListener("DOMContentLoaded", function(){
+    // Элементы
 const main = document.getElementsByClassName("main")[0];
 const movieTitle = document.getElementsByClassName("movieTitle")[0];
 const simTitle = document.getElementsByClassName("movieTitle")[1];
@@ -10,12 +10,21 @@ const movie = document.getElementsByClassName("movie")[0];
 
 
 // кнопки
+
+const searchBtn = document.getElementById("searchBtn");
 const themeChange = document.getElementById("themeChange");
-const searchBtn = document.getElementById("searchBtn")
+
+if(themeChange){
+    themeChange.addEventListener("click", themeCh);
+}
+if(searchBtn){
+    searchBtn.addEventListener("click", findMovie)  
+}
+
 
 // Слушатели событий
-themeChange.addEventListener("click", themeCh);
-searchBtn.addEventListener("click", findMovie)
+
+
 // Добавляем слушатель события на нажатие клавиши
 document.addEventListener('keydown', function(event) {
     // Проверяем, была ли нажата клавиша пробела
@@ -77,9 +86,7 @@ async function findMovie(){
         semularMovie.style.display="none";
         simTitle.style.display="none"
     }else{
-    
-    console.log(semularMovie);
-    
+        semularMovie.style.display="block";
        showMovie(response)
        findSimularMovies()
     }
@@ -90,7 +97,7 @@ const findSimularMovies = (async ()=>{
     const simularMovieTItle = document.getElementsByClassName("movieTitle")[1];
     const data = { apikey: "d6d0aa42", s: search };
     const result = await sendRequest("https://www.omdbapi.com/" , "GET", data);
-    console.log(result);
+    
     if(result.Response=="False"){
     }else{
         simularMovieTItle.innerHTML = `Найдено похожих фильмов ${result.totalResults}`;
@@ -98,35 +105,34 @@ const findSimularMovies = (async ()=>{
         console.log(result.Search);
         
         showSimularMovie(result.Search)
+        
     }
 });
 
 // Отрисовка похожих фильмов
 
-const showSimularMovie = async(movies)=>{
+function showSimularMovie(movies){
     const semularMovie = document.getElementsByClassName("semularMovie")[0];
     semularMovie.innerHTML= "";
     semularMovie.style.display="flex";
-    movies.forEach((elem)=>{
-        
-        if(elem.Poster != "N/A"){
-
-            let simularMovie = 
-            `
-        <div class="semularMovieCard" style="background-image: url('${elem.Poster}');">
-            <div class="saved" onclick="addSaved()"
-                data-imdbID="${elem.imdbID}" data-title="${elem.Title}" data-poster="${elem.Poster}">
+    for(let i= 0; i < movies.length; i++){
+        const movie = movies[i];
+        if(movie.Poster != "N/A"){
+            let simularMovie = `
+        <div class="semularMovieCard" style="background-image: url('${movie.Poster}');">
+            <div class="saved" onclick="addSaved(event)"
+                data-imdbID="${movie.imdbID}" data-title="${movie.Title}" data-poster="${movie.Poster}">
             </div>  
             <div class="semularMovieCardTitle" >
-                ${elem.Title}
+                ${movie.Title}
             </div>
         </div>`
-        semularMovie.innerHTML += simularMovie
+        semularMovie.innerHTML += simularMovie;
+        
         }else{
-            semularMovie.innerHTML= ''
         };
 
-    });
+    };
 }
 
 
@@ -151,93 +157,53 @@ function showMovie(movie){
           </div>
         `
     })
-    console.log(movie);
-    
+}
+});
+
+// Добавляем в Избранное
+function addSaved(event){
+    const target = event.currentTarget
+
+    const movieData ={
+        title:target.getAttribute("data-title"),
+        poster:target.getAttribute("data-poster"),
+        imdbID:target.getAttribute("data-imdbID"),
+    }
+
+    const favs = JSON.parse(localStorage.getItem("favs")) || [];
+
+    const movieIndex = favs.findIndex((movie)=>movie.imdbID === movieData.imdbID);
+    if(movieIndex > -1){
+        target.classList.remove("active");
+        favs.splice(movieIndex,1)
+    }else{
+        target.classList.add("active");
+        favs.push(movieData);
+        console.log(favs);
+        
+    }
+    localStorage.setItem("favs", JSON.stringify(favs))
 }
 
+const favoriTes = JSON.parse(localStorage.getItem("favs"))
+const favCard = document.getElementsByClassName("favoritsCards")[0];
+console.log(favoriTes);
 
-
-
-
-
-
-
-// Тест
-
-// const allPerson = [];
-// const addPerson = (add, addData = Date()) =>({
-//     ...add,
-//     addData,
-//     // addData,
-// });
-
-// const sul = {
-//     name: 'Sultanbek' ,
-//     age: 30,
-//     stydy: 'backend'
-// }
-// const person = {
-//     name: 'Sultan' ,
-//     age: 25,
-//     stydy: 'frontEnd'
-// }
-
-// allPerson.push('addPerson(sul))');
-// console.log(allPerson);
-
-// console.log(addPerson(sul));
-
-// const personw = addPerson(person);
-// console.log(person);
-
-// console.log(personw);
-
-
-// const mapArr = [12, 23, 34  ];
-
-// console.log(mapArr);
-
-// const newArr = mapArr.map((a) => {
-//     a - 3
-//     return a - 3
-// } )
-
-// console.log(newArr);
-
-// const userSul = {
-//     name: 'Sultan',
-//     age: 25,
-//     country: 'Tashkent'
-// }
-
-// const userINform = ({name , age}) => {
-//     if (!age){
-//         return `You don't ${name} !`
-//     }
-//     return `You ${name} welcome)`
-// }
-
-// console.log(userINform(userSul));
-
-
-// const {name, age , country} = userSul;
-
-// const mmmm = name;
-// console.log(mmmm);
-
-// console.log(name);
-// console.log(age);
-// console.log(country);
-
-
-// const massivLength = ['didi', 'lila', true];
-
-// console.log(massivLength);
-
-// const [mOne , mTwo] = massivLength;
-// const [oneM] = massivLength
-// // console.log(o);
-
-// console.log(mOne);
-// console.log(mTwo);
-
+favoriTes.forEach((elem)=>{
+    const card =document.createElement("div");
+    const cardTitle = document.createElement("div");
+    const cardStar = document.createElement("div");
+    cardStar.classList.add("saved");
+    cardStar.addEventListener("click", ()=> cardDelete(elem.imdbID))
+    cardTitle.classList.add("favTItle");
+    cardTitle.innerHTML= elem.title;
+    card.classList.add("favoritsCard");
+    card.style.backgroundImage= `url(${elem.poster})`;
+    card.appendChild(cardStar);
+    card.appendChild(cardTitle);
+    favCard.appendChild(card);
+})
+// Функция для удаления карточки из избранного
+function cardDelete(imdbID) {
+    
+}

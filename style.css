@@ -218,3 +218,33 @@ nav a{
 .dark ,.dark button, .dark a{
     color:white;
 }
+.saved.active{
+    background-color:orange;
+    filter: invert(100%);
+}
+.favoritsCards{
+    display: flex;
+    flex-wrap: wrap;
+    gap:20px;
+}
+.favoritsCard{
+    width: calc(200px + (300 - 200) * ((100vw - 320px) / (1920 - 320)));
+    height: calc(300px + (500 - 300) * ((100vw - 320px) / (1920 - 320)));
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    border-radius:10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:start;
+}
+.favTItle{
+    text-align: center;
+    font-size: 25px;
+    font-weight: 700;
+    background-color:rgb(255 255 255 / 40%);
+    padding: 20px 0;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+}
