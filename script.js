@@ -137,7 +137,7 @@ function showSimularMovie(movies){
 
 
 
-function showMovie(movie){
+ function showMovie(movie){
     main.style.display="block"
     movieTitle.style.display="block"
     document.getElementsByClassName("movie")[0].style.display="flex";
@@ -156,7 +156,7 @@ function showMovie(movie){
             <span class="subTitle">${movie[key]}</span>
           </div>
         `
-    })
+    });
 }
 });
 
@@ -183,7 +183,7 @@ function addSaved(event){
         
     }
     localStorage.setItem("favs", JSON.stringify(favs))
-}
+};  
 
 const favoriTes = JSON.parse(localStorage.getItem("favs"))
 const favCard = document.getElementsByClassName("favoritsCards")[0];
@@ -198,12 +198,34 @@ favoriTes.forEach((elem)=>{
     cardTitle.classList.add("favTItle");
     cardTitle.innerHTML= elem.title;
     card.classList.add("favoritsCard");
+    card.setAttribute("data-imdbID", elem.imdbID);
     card.style.backgroundImage= `url(${elem.poster})`;
     card.appendChild(cardStar);
     card.appendChild(cardTitle);
-    favCard.appendChild(card);
-})
+    favCard.appendChild(card);  
+});
+
+
 // Функция для удаления карточки из избранного
 function cardDelete(imdbID) {
     
+    // Получаем массив избранных фильмов из localStorage
+    let favs = JSON.parse(localStorage.getItem("favs")) || [];
+    
+    // Находим индекс фильма по imdbID
+    const movieIndex = favs.findIndex(movie => movie.imdbID === imdbID);
+
+    if (movieIndex > -1) {
+        // Удаляем фильм из массива
+        favs.splice(movieIndex, 1);
+
+        // Обновляем localStorage
+        localStorage.setItem("favs", JSON.stringify(favs));
+
+        // Удаляем карточку из DOM
+        const cardToDelete = document.querySelector(`.favoritsCard[data-imdbID="${imdbID}"]`);
+        if (cardToDelete) {
+            cardToDelete.remove();  // Удаляем карточку
+        }
+    }
 }
